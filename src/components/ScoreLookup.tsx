@@ -6,9 +6,36 @@ import { Select, SelectContent, SelectItem, SelectGroup, SelectTrigger, SelectVa
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export default function ScoreLookup() {
   const [selectedPerson, setSelectedPerson] = useState<PersonType | null>(null);
+  const [editedLocation, setEditedLocation] = useState<string>("");
+
+  const handlePersonSelect = (value: string) => {
+    const [category, title] = value.split('|');
+    const person = personScores
+      .find(group => group.category === category)
+      ?.persons.find(p => p.title === title);
+    
+    if (person) {
+      setSelectedPerson(person);
+      setEditedLocation(person.location);
+    } else {
+      setSelectedPerson(null);
+      setEditedLocation("");
+    }
+  };
+
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedLocation(e.target.value);
+    if (selectedPerson) {
+      setSelectedPerson({
+        ...selectedPerson,
+        location: e.target.value
+      });
+    }
+  };
 
   return (
     <div className="w-full max-w-2xl mx-auto p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -22,15 +49,7 @@ export default function ScoreLookup() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <Select
-            onValueChange={(value) => {
-              const [category, title] = value.split('|');
-              const person = personScores
-                .find(group => group.category === category)
-                ?.persons.find(p => p.title === title);
-              setSelectedPerson(person || null);
-            }}
-          >
+          <Select onValueChange={handlePersonSelect}>
             <SelectTrigger className="w-full bg-white/50 backdrop-blur-sm">
               <SelectValue placeholder="Select a person type" />
             </SelectTrigger>
@@ -63,12 +82,20 @@ export default function ScoreLookup() {
                     Score: {selectedPerson.score}
                   </Badge>
                 </div>
-                <div className="flex gap-4 text-sm text-gray-600">
-                  <div className="flex items-center gap-1">
-                    <MapPin className="h-4 w-4" />
-                    <span>{selectedPerson.location}</span>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-1 text-sm text-gray-600">
+                      <MapPin className="h-4 w-4" />
+                      <span>Location</span>
+                    </label>
+                    <Input
+                      value={editedLocation}
+                      onChange={handleLocationChange}
+                      placeholder="Enter location"
+                      className="bg-white/50"
+                    />
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 text-sm text-gray-600">
                     <Calendar className="h-4 w-4" />
                     <span>{selectedPerson.date}</span>
                   </div>
