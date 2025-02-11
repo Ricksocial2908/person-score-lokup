@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 export default function ScoreLookup() {
   const [selectedPerson, setSelectedPerson] = useState<PersonType | null>(null);
   const [editedLocation, setEditedLocation] = useState<string>("");
+  const [editedDate, setEditedDate] = useState<string>("");
 
   const handlePersonSelect = (value: string) => {
     const [category, title] = value.split('|');
@@ -21,9 +22,11 @@ export default function ScoreLookup() {
     if (person) {
       setSelectedPerson(person);
       setEditedLocation(person.location);
+      setEditedDate(person.date);
     } else {
       setSelectedPerson(null);
       setEditedLocation("");
+      setEditedDate("");
     }
   };
 
@@ -33,6 +36,16 @@ export default function ScoreLookup() {
       setSelectedPerson({
         ...selectedPerson,
         location: e.target.value
+      });
+    }
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedDate(e.target.value);
+    if (selectedPerson) {
+      setSelectedPerson({
+        ...selectedPerson,
+        date: e.target.value
       });
     }
   };
@@ -95,9 +108,17 @@ export default function ScoreLookup() {
                       className="bg-white/50"
                     />
                   </div>
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <Calendar className="h-4 w-4" />
-                    <span>{selectedPerson.date}</span>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-1 text-sm text-gray-600">
+                      <Calendar className="h-4 w-4" />
+                      <span>Date</span>
+                    </label>
+                    <Input
+                      value={editedDate}
+                      onChange={handleDateChange}
+                      placeholder="Enter date"
+                      className="bg-white/50"
+                    />
                   </div>
                 </div>
               </div>
