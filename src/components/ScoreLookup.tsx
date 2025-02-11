@@ -5,6 +5,7 @@ import { personScores } from '../data/personScores';
 import { Select, SelectContent, SelectItem, SelectGroup, SelectTrigger, SelectValue, SelectLabel } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { MapPin, Calendar } from "lucide-react";
 
 export default function ScoreLookup() {
   const [selectedPerson, setSelectedPerson] = useState<PersonType | null>(null);
@@ -52,14 +53,26 @@ export default function ScoreLookup() {
 
           {selectedPerson && (
             <div className="mt-6 p-4 rounded-lg bg-gray-50/80 backdrop-blur-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm text-gray-500">{selectedPerson.category}</p>
-                  <h3 className="font-medium">{selectedPerson.title}</h3>
+              <div className="space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm text-gray-500">{selectedPerson.category}</p>
+                    <h3 className="font-medium">{selectedPerson.title}</h3>
+                  </div>
+                  <Badge variant="secondary" className="text-lg px-4 py-1">
+                    Score: {selectedPerson.score}
+                  </Badge>
                 </div>
-                <Badge variant="secondary" className="text-lg px-4 py-1">
-                  Score: {selectedPerson.score}
-                </Badge>
+                <div className="flex gap-4 text-sm text-gray-600">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-4 w-4" />
+                    <span>{selectedPerson.location}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4" />
+                    <span>{selectedPerson.date}</span>
+                  </div>
+                </div>
               </div>
             </div>
           )}
